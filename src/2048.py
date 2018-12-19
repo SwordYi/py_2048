@@ -6,6 +6,7 @@
 import random
 
 matrix = [[0 for n in range(4)] for m in range(4)]
+score = 0
 
 # 初始化游戏
 def init():
@@ -26,7 +27,7 @@ def notzero(s):
 def display():
     print(r"----------------------------2048----------------------------")
     print(r"操作说明： 上（W） 下（S） 左（A） 右（D） 退出（Q）")
-    print(r"总分：%d" % calMaxNum())
+    print(r"总分：%d" % score)
     print("\n\
         ┌────┬────┬────┬────┐\n\
         │%4s│%4s│%4s│%4s│\n\
@@ -63,8 +64,10 @@ def moveLeft():
 					matrix[i][j] = matrix[i][k]
 					matrix[i][k] = 0
 				elif matrix[i][j] > 0 and matrix[i][j] == matrix[i][k]:
-					matrix[i][j] = matrix[i][j] + matrix[i][k]
+					matrix[i][j] = matrix[i][j] + matrix[i][k]					
 					matrix[i][k] = 0
+					global score 
+					score += matrix[i][j]
 					break;
 				elif matrix[i][j] > 0 and matrix[i][k] > 0 \
 					and matrix[i][j] != matrix[i][k]:
@@ -84,6 +87,8 @@ def moveRight():
 				elif matrix[i][j] > 0 and matrix[i][j] == matrix[i][k]:
 					matrix[i][j] = matrix[i][j] + matrix[i][k]
 					matrix[i][k] = 0
+					global score
+					score += matrix[i][j]
 					break;
 				elif matrix[i][j] > 0 and matrix[i][k] > 0 \
 					and matrix[i][j] != matrix[i][k]:
@@ -103,6 +108,8 @@ def moveUp():
 				elif matrix[i][j] > 0 and matrix[i][j] == matrix[k][j]:
 					matrix[i][j] = matrix[i][j] + matrix[k][j]
 					matrix[k][j] = 0
+					global score
+					score += matrix[i][j]
 					break;
 				elif matrix[i][j] > 0 and matrix[k][j] > 0 \
 					and matrix[i][j] != matrix[k][j]:
@@ -122,6 +129,8 @@ def moveDown():
 				elif matrix[i][j] > 0 and matrix[i][j] == matrix[k][j]:
 					matrix[i][j] = matrix[i][j] + matrix[k][j]
 					matrix[k][j] = 0
+					global score
+					score += matrix[i][j]
 					break;
 				elif matrix[i][j] > 0 and matrix[k][j] > 0 \
 					and matrix[i][j] != matrix[k][j]:
@@ -142,17 +151,6 @@ def gameOver():
 			break;
 	return gameoverFlag
 
-#判断游戏状态，是否结束
-def calMaxNum():
-	maxNum = 0
-	for i in range(4):
-		for j in range(4):
-			if maxNum < matrix[i][j] and matrix[i][j] != 2:
-				maxNum = matrix[i][j]
-
-	return maxNum
-
-
 # 主程序
 def main():
     init()
@@ -160,7 +158,7 @@ def main():
     while True:
     	d = input()
     	if d == 'q' or d == 'Q':
-    		print("退出游戏.")
+    		print("退出游戏，本次得分为：%d" % score)
     		break
     	elif d == 'w' or d == 'W':
     		print("上")
@@ -183,7 +181,7 @@ def main():
     		randomNum()
     		display()
     	if gameOver() == True:
-    		print("游戏结束，本次得分为：%d" % calMaxNum())
+    		print("游戏结束，本次得分为：%d" % score)
     		break;
     	
 if __name__ == "__main__":
