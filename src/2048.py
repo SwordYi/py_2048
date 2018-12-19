@@ -190,9 +190,9 @@ class Game:
 	def isStartNewGame(self):
 		while True:
 			d = input("是否重新开始一局新的游戏（y/n）:")
-			if d == 'y' or d == 'Y':
+			if d in ['y', 'Y']:
 				return True
-			elif d == 'n' or d == 'N':
+			elif d in ['n', 'N']:
 				return False
 			else:
 				print("输入错误，请重新输入！")
@@ -210,17 +210,17 @@ class Game:
 				d2 = msvcrt.getch()			
 			while msvcrt.kbhit(): # 读取多余的字符，不处理
 				msvcrt.getch()
-			if d == b'q' or d == b'Q':
+			if d in [b'q', b'Q']:
 				self.writeFile()
 				print("退出游戏，本次积分为：%d" % (self.score))
 				break
-			elif d == b'w' or d == b'W' or d == b'k' or d == b'K' or (d == b'\xe0' and d2 == b'H'):    		
+			elif d in [b'w', b'W', b'k', b'K'] or (d == b'\xe0' and d2 == b'H'):    		
 				self.moveUp()    		
-			elif d == b's' or d == b'S' or d == b'j' or d == b'J' or (d == b'\xe0' and d2 == b'P'):    		
+			elif d in [b's', b'S', b'j', b'J'] or (d == b'\xe0' and d2 == b'P'):    		
 				self.moveDown()    		
-			elif d == b'a' or d == b'A' or d == b'h' or d == b'H' or (d == b'\xe0' and d2 == b'K'):
+			elif d in [b'a', b'A', b'h', b'H'] or (d == b'\xe0' and d2 == b'K'):
 				self.moveLeft()   	    		
-			elif d == b'd' or d == b'D' or d == b'l' or d == b'L' or (d == b'\xe0' and d2 == b'M'):    		
+			elif d in [b'd', b'D', b'l', b'L'] or (d == b'\xe0' and d2 == b'M'):    		
 				self.moveRight()    		
 			else:
 				continue
