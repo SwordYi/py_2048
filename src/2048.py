@@ -30,8 +30,8 @@ class Game:
 	# 显示结果
 	def display(self):
 		self.CLS()
-		print(r"----------------------------2048----------------------------")
-		print(r"操作说明： 上（W） 下（S） 左（A） 右（D） 退出（Q）")
+		print(r"----------------------------------2048----------------------------------")
+		print(r"操作说明：上（W/K/↑） 下（S/J/↓） 左（A/H/←） 右（D/L/→） 退出（Q）")
 		print(r"当前积分：%d，最高积分：%d" % (self.score, self.best))
 		print("\n\
 			┌────┬────┬────┬────┐\n\
@@ -207,20 +207,20 @@ class Game:
 		while True:					
 			d = msvcrt.getch() # 读取字符
 			if d == b'\xe0':   # 处理方向键，属于功能键，由2个字节组成
-				d = msvcrt.getch()			
+				d2 = msvcrt.getch()			
 			while msvcrt.kbhit(): # 读取多余的字符，不处理
 				msvcrt.getch()
 			if d == b'q' or d == b'Q':
 				self.writeFile()
 				print("退出游戏，本次积分为：%d" % (self.score))
 				break
-			elif d == b'w' or d == b'W' or d == b'H':    		
+			elif d == b'w' or d == b'W' or d == b'k' or d == b'K' or (d == b'\xe0' and d2 == b'H'):    		
 				self.moveUp()    		
-			elif d == b's' or d == b'S' or d == b'P':    		
+			elif d == b's' or d == b'S' or d == b'j' or d == b'J' or (d == b'\xe0' and d2 == b'P'):    		
 				self.moveDown()    		
-			elif d == b'a' or d == b'A' or d == b'K':
+			elif d == b'a' or d == b'A' or d == b'h' or d == b'H' or (d == b'\xe0' and d2 == b'K'):
 				self.moveLeft()   	    		
-			elif d == b'd' or d == b'D' or d == b'M':    		
+			elif d == b'd' or d == b'D' or d == b'l' or d == b'L' or (d == b'\xe0' and d2 == b'M'):    		
 				self.moveRight()    		
 			else:
 				continue
@@ -248,6 +248,6 @@ def inputWinScore():
 			print("请重新输入数字！")		
 
 if __name__ == "__main__":
-	print(r"----------------------------2048----------------------------")	
+	print(r"----------------------------------2048----------------------------------")	
 	game = Game(int(inputWinScore()))
 	game.start()
