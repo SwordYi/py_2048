@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
     ProductName:2048
     Author:Sword
@@ -229,23 +230,22 @@ class Game:
 			if self.isfailed() == True or self.isWin() ==True:
 				self.writeFile()
 				print("游戏结束，本次积分为：%d" % (self.score))
-				if self.isStartNewGame() == True:	# 进行下一次游戏需要初始化对象、重新显示。
-					winScore = 0
-					while True:
-						winScore = input("请输入游戏赢的最大值(必需大于等于4):")
-						if int(winScore) >= 4:
-							break
-					self.__init__(int(winScore))
+				if self.isStartNewGame() == True:	# 进行下一次游戏需要初始化对象、重新显示。				
+					self.__init__(int(inputWinScore()))
 					self.display()
 				else:
 					break
-	    	
-if __name__ == "__main__":
-	print(r"----------------------------2048----------------------------")
-	winScore = 0
+	   
+# 输入游戏的最大值
+def inputWinScore():
 	while True:
 		winScore = input("请输入游戏赢的最大值(必需大于等于4):")
-		if int(winScore) >= 4:
-			break
-	game = Game(int(winScore))
+		if winScore.isdigit() == True and int(winScore) >= 4:
+			return int(winScore)
+		else:
+			print("请重新输入数字！")		
+
+if __name__ == "__main__":
+	print(r"----------------------------2048----------------------------")	
+	game = Game(int(inputWinScore()))
 	game.start()
