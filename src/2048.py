@@ -205,20 +205,22 @@ class Game:
 	def start(self):
 		self.display()
 		while True:					
-			d = msvcrt.getch().decode() # 读取字符
-			while msvcrt.kbhit(): #读取多余的字符，不处理
+			d = msvcrt.getch() # 读取字符
+			if d == b'\xe0':   # 处理方向键，属于功能键，由2个字节组成
+				d = msvcrt.getch()			
+			while msvcrt.kbhit(): # 读取多余的字符，不处理
 				msvcrt.getch()
-			if d == 'q' or d == 'Q':
+			if d == b'q' or d == b'Q':
 				self.writeFile()
 				print("退出游戏，本次积分为：%d" % (self.score))
 				break
-			elif d == 'w' or d == 'W':    		
+			elif d == b'w' or d == b'W' or d == b'H':    		
 				self.moveUp()    		
-			elif d == 's' or d == 'S':    		
+			elif d == b's' or d == b'S' or d == b'P':    		
 				self.moveDown()    		
-			elif d == 'a' or d == 'A':
+			elif d == b'a' or d == b'A' or d == b'K':
 				self.moveLeft()   	    		
-			elif d == 'd' or d == 'D':    		
+			elif d == b'd' or d == b'D' or d == b'M':    		
 				self.moveRight()    		
 			else:
 				continue
