@@ -4,7 +4,7 @@
     CreateTime:2018-12-17
     ModefiedTime:2018-12-19
 """
-import random, os
+import random, os, msvcrt
 
 class Game:
 	def __init__(self, _WinScore_ = 32, _BEST_FILE_ = "bestScore.dat"):
@@ -28,6 +28,7 @@ class Game:
 
 	# 显示结果
 	def display(self):
+		self.CLS()
 		print(r"----------------------------2048----------------------------")
 		print(r"操作说明： 上（W） 下（S） 左（A） 右（D） 退出（Q）")
 		print(r"当前积分：%d，最高积分：%d" % (self.score, self.best))
@@ -184,11 +185,28 @@ class Game:
 		if self.score > self.best:
 			self.best = self.score
 
-	# 主程序
-	def start(self):    
-		self.display()
+	# 是否重新开始一局新的游戏
+	def isStartNewGame(self):
 		while True:
-			d = input()
+			d = input("是否重新开始一局新的游戏（y/n）:")
+			if d == 'y' or d == 'Y':
+				return True
+			elif d == 'n' or d == 'N':
+				return False
+			else:
+				print("输入错误，请重新输入！")
+
+	# 清屏
+	def CLS(self):
+		os.system('cls')
+
+	# 主程序
+	def start(self):
+		self.display()
+		while True:					
+			d = msvcrt.getch().decode() # 读取字符
+			while msvcrt.kbhit(): #读取多余的字符，不处理
+				msvcrt.getch()
 			if d == 'q' or d == 'Q':
 				self.writeFile()
 				print("退出游戏，本次积分为：%d" % (self.score))
@@ -204,14 +222,30 @@ class Game:
 			else:
 				continue
 			self.updateBest()
-			self.addRandomNum()
-			self.display()
+			self.addRandomNum()			
+			self.display()		
 
+			# 结束一轮游戏后
 			if self.isfailed() == True or self.isWin() ==True:
 				self.writeFile()
 				print("游戏结束，本次积分为：%d" % (self.score))
-				break;
+				if self.isStartNewGame() == True:	# 进行下一次游戏需要初始化对象、重新显示。
+					winScore = 0
+					while True:
+						winScore = input("请输入游戏赢的最大值(必需大于等于4):")
+						if int(winScore) >= 4:
+							break
+					self.__init__(int(winScore))
+					self.display()
+				else:
+					break
 	    	
 if __name__ == "__main__":
-	game = Game(2048)
+	print(r"----------------------------2048----------------------------")
+	winScore = 0
+	while True:
+		winScore = input("请输入游戏赢的最大值(必需大于等于4):")
+		if int(winScore) >= 4:
+			break
+	game = Game(int(winScore))
 	game.start()
