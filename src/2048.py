@@ -44,17 +44,6 @@ def display():
           notzero(matrix[3][0]), notzero(matrix[3][1]), notzero(matrix[3][2]), notzero(matrix[3][3]))
           )
 
-# 随机生成新的数字2
-def randomNum():
-    initNumFlag = 0
-    while True:
-        s = divmod(random.randrange(0, 16), 4)
-        if matrix[s[0]][s[1]] == 0:
-            matrix[s[0]][s[1]] = 2
-            initNumFlag = 1
-        if initNumFlag == 1:
-            break
-
 # 往左移动
 def moveLeft():
 	for i in range(4):
@@ -139,17 +128,44 @@ def moveDown():
 						matrix[k][j] = 0
 					break;	
 
-#判断游戏状态，是否结束
-def gameOver():
-	gameoverFlag = True
+# 判断是否还有空位
+def isHaveSpace():
 	for i in range(4):
 		for j in range(4):
 			if matrix[i][j] == 0:
-				gameoverFlag = False
-				break
-		if gameoverFlag == False:
-			break;
-	return gameoverFlag
+				return True
+	return False
+
+# 随机生成新的数字2
+def addRandomNum():    
+    while isHaveSpace() == True:
+        s = divmod(random.randrange(0, 16), 4)
+        if matrix[s[0]][s[1]] == 0:
+            matrix[s[0]][s[1]] = 2
+            return
+
+
+#判断游戏状态，是否失败
+def isfailed():
+	for i in range(4):
+		for j in range(4):
+			if matrix[i][j] == 0 or \
+			i > 0 and matrix[i][j] == matrix[i-1][j] or \
+			i < 3 and matrix[i][j] == matrix[i+1][j] or \
+			j > 0 and matrix[i][j] == matrix[i][j-1] or \
+			j < 3 and matrix[i][j] == matrix[i][j+1] :
+				return False
+	print("--------------------------游戏失败--------------------------")
+	return True
+
+#判断游戏状态，是否成功
+def isSuccess():	
+	for i in range(4):
+		for j in range(4):
+			if matrix[i][j] == 32:
+				print("--------------------------游戏成功--------------------------")
+				return True
+	return False
 
 # 主程序
 def main():
@@ -160,27 +176,20 @@ def main():
     	if d == 'q' or d == 'Q':
     		print("退出游戏，本次得分为：%d" % score)
     		break
-    	elif d == 'w' or d == 'W':
-    		print("上")
-    		moveUp()
-    		randomNum()
-    		display()
-    	elif d == 's' or d == 'S':
-    		print("下")
-    		moveDown()
-    		randomNum()
-    		display()
+    	elif d == 'w' or d == 'W':    		
+    		moveUp()    		
+    	elif d == 's' or d == 'S':    		
+    		moveDown()    		
     	elif d == 'a' or d == 'A':
-    		moveLeft()
-    		print("左")
-    		randomNum()
-    		display()
-    	elif d == 'd' or d == 'D':
-    		print("右")
-    		moveRight()
-    		randomNum()
-    		display()
-    	if gameOver() == True:
+    		moveLeft()   	    		
+    	elif d == 'd' or d == 'D':    		
+    		moveRight()    		
+    	else:
+    		continue
+    	addRandomNum()
+    	display()
+
+    	if isfailed() == True or isSuccess() ==True:
     		print("游戏结束，本次得分为：%d" % score)
     		break;
     	
