@@ -1,16 +1,20 @@
 """
     ProductName:2048
     Author:Sword
-    ModefiedTime:2018-12-17
+    CreateTime:2018-12-17
+    ModefiedTime:2018-12-19
 """
-import random
+import random,os
 
+_BEST_FILE = "bestScore.dat"
 matrix = [[0 for n in range(4)] for m in range(4)]
 score = 0
+best = 0
 
 # 初始化游戏
 def init():
-    initNumFlag = 0
+    initNumFlag = 0    
+    readFile()
     while True:
         s = divmod(random.randrange(0, 16), 4)
         if matrix[s[0]][s[1]] == 0:
@@ -27,7 +31,7 @@ def notzero(s):
 def display():
     print(r"----------------------------2048----------------------------")
     print(r"操作说明： 上（W） 下（S） 左（A） 右（D） 退出（Q）")
-    print(r"总分：%d" % score)
+    print(r"当前积分：%d，最高积分：%d" % (score, best))
     print("\n\
         ┌────┬────┬────┬────┐\n\
         │%4s│%4s│%4s│%4s│\n\
@@ -145,7 +149,7 @@ def addRandomNum():
             return
 
 
-#判断游戏状态，是否失败
+# 判断游戏状态，是否失败
 def isfailed():
 	for i in range(4):
 		for j in range(4):
@@ -158,14 +162,32 @@ def isfailed():
 	print("--------------------------游戏失败--------------------------")
 	return True
 
-#判断游戏状态，是否成功
+# 判断游戏状态，是否成功
 def isSuccess():	
 	for i in range(4):
 		for j in range(4):
-			if matrix[i][j] == 32:
-				print("--------------------------游戏成功--------------------------")
+			if matrix[i][j] == 2048:
+				print("--------------------------游戏胜利--------------------------")
 				return True
 	return False
+
+# 读取文件
+def readFile():
+	if os.path.exists(_BEST_FILE):
+		with open(_BEST_FILE, 'r') as f:
+			global best
+			best = int(f.read())
+
+# 写入文件
+def writeFile():
+	with open(_BEST_FILE, 'w') as f:
+		f.write(str(best))
+
+# 更新最高分
+def updateBest():
+	global score, best
+	if score > best:
+		best = score
 
 # 主程序
 def main():
@@ -174,7 +196,8 @@ def main():
     while True:
     	d = input()
     	if d == 'q' or d == 'Q':
-    		print("退出游戏，本次得分为：%d" % score)
+    		writeFile()
+    		print("退出游戏，本次积分为：%d" % (score))
     		break
     	elif d == 'w' or d == 'W':    		
     		moveUp()    		
@@ -186,11 +209,13 @@ def main():
     		moveRight()    		
     	else:
     		continue
+    	updateBest()
     	addRandomNum()
     	display()
 
     	if isfailed() == True or isSuccess() ==True:
-    		print("游戏结束，本次得分为：%d" % score)
+    		writeFile()
+    		print("游戏结束，本次积分为：%d" % (score))
     		break;
     	
 if __name__ == "__main__":
